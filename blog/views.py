@@ -4,8 +4,8 @@ from .models import Post, Comment
 from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 
-def base(request):
-    return render(request, 'blog/base.html')
+def home(request):
+    return render(request, 'blog/home.html')
 
 def post_list(request):
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
