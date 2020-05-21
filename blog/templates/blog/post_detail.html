@@ -6,11 +6,49 @@
             <div class="date">
                 {{ post.published_date }}
             </div>
+        {% else %}
+            <a class="btn btn-default" href="{% url 'post_publish' pk=post.pk %}">Publish</a>
         {% endif %}
         {% if user.is_authenticated %}
             <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+            <a class="btn btn-default" href="{% url 'post_remove' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
         {% endif %}
         <h2>{{ post.title }}</h2>
         <p>{{ post.text|linebreaksbr }}</p>
     </div>
+    <hr>
+    {% if form %}
+        <form method="POST" class="post-form">{% csrf_token %}
+            {{ form.as_p }}
+            <a class="btn btn-default" href="{% url 'post_detail' pk=post.pk %}">close</a>
+            <button type="submit" class="save btn btn-default">add comment</button>
+        </form>
+    {% else %}
+        <a class="btn btn-default" href="{% url 'add_comment_to_post' pk=post.pk %}">add comment</a>
+    {% endif %}
+    <br>
+    {% for comment in post.comments.all %}
+        {% if user.is_authenticated %}
+            <div class="comment">
+                <div class="date">
+                    {{ comment.created_date }}
+                    <a class="btn btn-default" href="{% url 'comment_remove' pk=comment.pk %}">remove</a>
+                    {% if not comment.approved_comment %}
+                        <a class="btn btn-default" href="{% url 'comment_approve' pk=comment.pk %}">approve</a>
+                    {% else %}
+                        <a class="btn btn-default" href="{% url 'comment_unapprove' pk=comment.pk %}">unapprove</a>
+                    {% endif %}
+                </div>
+                <strong>{{ comment.author }}</strong>
+                <p>{{ comment.text|linebreaks }}</p>
+            </div>
+        {% else %}
+            {% if comment.approved_comment %}
+                <strong>{{ comment.author }}</strong>
+                <p>{{ comment.text|linebreaks }}</p>
+            {% endif %}
+        {% endif %}
+    {% empty %}
+        <p>No comments here yet :(</p>
+    {% endfor %}
 {% endblock %}

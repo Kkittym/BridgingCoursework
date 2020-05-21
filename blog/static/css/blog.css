@@ -1,10 +1,10 @@
 h1 a, h2 a {
     color: #BA87EE;
-    font-family: 'Lobster';
+    font-family: 'Arial';
 }
 
 body {
-    padding-left: 15px;
+    font-family: 'Arial';
 }
 
 .page-header {
@@ -17,6 +17,14 @@ body {
     color: #ffffff;
     font-size: 36pt;
     text-decoration: none;
+    font-family: 'Arial';
+}
+
+.page-header small {
+    color: #ffffff;
+    font-size: 24pt;
+    text-decoration: none;
+    font-family: 'Arial';
 }
 
 .content {
@@ -24,7 +32,7 @@ body {
 }
 
 h1, h2, h3, h4 {
-    font-family: 'Lobster', cursive;
+    font-family: 'Arial', cursive;
 }
 
 .date {

@@ -1,5 +1,11 @@
 {% extends 'blog/base.html' %}
 {% block content %}
+    {% if user.is_authenticated %}
+    <div class="post">
+        <h2><a href="{% url 'post_new' %}"><span class="glyphicon glyphicon-plus"></span> add a post</a></h2>
+        <h2><a href="{% url 'post_draft_list' %}"><span class="glyphicon glyphicon-edit"></span> draft posts</a></h2>
+    </div>
+    {% endif %}
     {% for post in posts %}
         <div class="post">
             <div class="date">
@@ -7,6 +13,7 @@
             </div>
             <h2><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h2>
             <p>{{ post.text|linebreaksbr }}</p>
+            <a href="{% url 'post_detail' pk=post.pk %}">Comments: {{ post.approved_comments.count }}</a>
         </div>
     {% endfor %}
 {% endblock %}
