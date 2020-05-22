@@ -1,3 +1,4 @@
+# Django
 *.pyc
 *~
 /.vscode
@@ -6,3 +7,7 @@ bridgingcoursework
 db.sqlite3
 /static
 .DS_Store
+
+# Selenium TDD
+geckodriver.log
+/geckodriver
