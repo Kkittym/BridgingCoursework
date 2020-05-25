@@ -3,6 +3,10 @@
 {% block title %}To-Do lists{% endblock %}
 {% block content %}
     <h1>Your To-Do list</h1>
+    <p>
+        This is the <a href=https://www.obeythetestinggoat.com/>Obey the Testing Goat</a> test driven development tutorial. I have only worked through 5 chapters and may delete this later.<br>
+        So as not to fill up my database, none of these items will be saved
+    </p>
     <form method="POST">
         <input name="item_text" id="id_new_item" placeholder="Enter a to-do item" />
         {% csrf_token %}

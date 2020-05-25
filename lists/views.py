@@ -6,10 +6,8 @@ from lists.models import Item
 
 def home_page(request):
     if request.method == 'POST':
-        Item.objects.create(text=request.POST['item_text'])
+        # Item.objects.create(text=request.POST['item_text'])
         return redirect('/to-do')
 
     items = Item.objects.all()
-    if (items.count() > 10):
-        items.delete()
     return render(request, 'home.html', {'items': items})
