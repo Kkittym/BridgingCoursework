@@ -1,10 +1,9 @@
 {% load static %}
 <html>
     <head>
-        <title>Katie Midgley</title>
+        <title>{% block title %}{% endblock %} - Katie Midgley</title>
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-        <!-- <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css"> -->
         <link rel="stylesheet" href="{% static 'css/blog.css' %}">
     </head>
     <body>
@@ -19,7 +18,7 @@
             # <a href="{# % url 'drawings' % #}" class="top-menu">Drawings</a> -->
             <h1><a href="/">Katie Midgley</a> <small>she/her</small></h1>
         </div>
-        <div class="content container">
+        <div class="content container-fluid">
             <div class="row">
                 <div>
                 {% block content %}
@@ -27,5 +26,30 @@
                 </div>
             </div>
         </div>
+    <div class="page-footer">
+      <div class="row">
+        <div class="col-md-4">
+          <h1>Blog</h1>
+          <a href="{% url 'post_list' %}" class="footer-link">Posts</a>
+          <br>
+          {% if user.is_authenticated %}
+          <a href="{% url 'post_new' %}" class="footer-link">Add a post</a>
+          <br>
+          <a href="{% url 'post_draft_list' %}" class="footer-link">View Draft posts</a>
+          {% endif %}
+        </div>
+        <div class="col-md-4">
+            <h1>TDD list</h1>
+            <a href="to-do" class="footer-link">To-do list</a>
+            <br>
+        </div>
+        <div class="col-md-4">
+            <h1>CV</h1>
+            <a href="to-do" class="footer-link">View CV</a>
+            <br>
+        </div> 
+      </div>
+    </div> 
+  </footer>
     </body>
 </html>

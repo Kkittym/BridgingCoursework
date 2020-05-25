@@ -56,6 +56,7 @@ h1, h2, h3, h4 {
 
 .post {
     margin-bottom: 70px;
+    width: 50%;
 }
 
 .post h2 a, .post h2 a:visited {
@@ -63,8 +64,30 @@ h1, h2, h3, h4 {
 }
 
 .cat-image {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 40px 40px 40px 40px;
+}
+
+.page-footer {
+    background-color: #BA87EE;
+    margin-bottom: 0;
+    padding: 20px 20px 20px 40px;
+}
+
+.page-footer h1 {
+    color: #ffffff;
+    font-size: 26pt;
+    text-decoration: none;
+    font-family: 'Arial';
+}
+
+.footer-link .footer-link:hover, .footer-link:visited {
+    color: #ffffff;
+    font-size: 18pt;
+}
+
+.column {
+    float: left;
+    width: 33.33%;
+    border-style: solid;
 }

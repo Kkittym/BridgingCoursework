@@ -1,6 +1,10 @@
 {% extends 'blog/base.html' %}
 
 {% load static %}
+
+{% block title %}Home{% endblock %}
 {% block content %}
-    <img class="cat-image" src="{% static 'media/Sleepy1.gif' %}" alt="A sleepy cat">
+<div class="cat-image" >
+    <img src="{% static 'media/Sleepy1.gif' %}" alt="A sleepy cat">
+</div>
 {% endblock %}
