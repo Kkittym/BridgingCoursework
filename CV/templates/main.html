@@ -1,0 +1,15 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}CV{% endblock %}
+{% block content %}
+{% if CV %}
+<!-- Display cv -->
+<div class="cv">
+    <h1>{{CV.name}}</h1>
+    <p>{{CV.phone}}</p>
+    <p>{{CV.email}}</p>
+</div>
+{% else %}
+<!-- Display add cv button -->
+{% endif%}
+{% endblock %}
