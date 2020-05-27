@@ -2,14 +2,36 @@
 
 {% block title %}CV{% endblock %}
 {% block content %}
-{% if CV %}
+{% if cv %}
 <!-- Display cv -->
 <div class="cv">
-    <h1>{{CV.name}}</h1>
-    <p>{{CV.phone}}</p>
-    <p>{{CV.email}}</p>
+    <h1>{{ cv.name }}</h1>
+    <p>{{ cv.phone }}</p>
+    <p>{{ cv.email }}</p>
+    {% for section in CV.sections.all %}
+    <hr>
+        <h1>{{ section.title }}</h1>
+        {% for institute in section.institutes.all %}
+            <p>{{ institute.start }} - {{ institute.end }} | <b>{{ institute.location }}</b> | {{ institute.area }}</p>
+            <ul>
+            {% for element in institute.elements.all %}
+                <li>{{ element.text }}</li>
+            {% endfor %}
+            </ul>
+            <!-- Button for adding elements -->
+        {% endfor %}
+        <!-- Button for adding institutes -->
+        <ul>
+        {% for element in section.elements.all %}
+            <li>{{ element.text }}</li>
+        {% endfor %}
+        </ul>
+    {% endfor %}
+    <!-- Button for adding sections -->
 </div>
 {% else %}
-<!-- Display add cv button -->
+    {% if user.is_authenticated %}
+        <a href="{% url 'cv_new' %}"><span class="glyphicon glyphicon-plus"></span></a>
+    {% endif%}
 {% endif%}
 {% endblock %}

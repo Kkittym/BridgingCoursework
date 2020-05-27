@@ -20,6 +20,7 @@ class Section(models.Model):
         return self.title
 
 class Institute(models.Model):
+    section = models.ForeignKey('CV.Section', on_delete=models.CASCADE, related_name='institutes')
     start = models.TextField()
     end = models.TextField()
     location = models.TextField()

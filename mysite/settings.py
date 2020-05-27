@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'blog.apps.BlogConfig',
     'lists',
-    'CV'
+    'CV.apps.CvConfig',
 ]
 
 MIDDLEWARE = [
