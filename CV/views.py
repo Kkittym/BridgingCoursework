@@ -25,3 +25,17 @@ def CV_new(request):
     else:
         form = CVForm()
     return render(request, 'create_cv.html', {'form': form})
+
+@login_required
+def section_new(request):
+    cv = CV.objects.get()
+    if request.method == "POST":
+        form = SectionForm(request.POST)
+        if form.is_valid():
+            section = form.save(commit=False)
+            section.CV = cv
+            section.save()
+            return redirect('cv')
+    else:
+        form = SectionForm()
+    return render(request, 'main.html', {'cv':cv, 'form': form})

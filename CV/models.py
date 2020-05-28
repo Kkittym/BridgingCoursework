@@ -11,6 +11,9 @@ class CV(models.Model):
 
     def __str__(self):
         return (self.name + "'s CV")
+    
+    def getType(self):
+        return "cv"
 
 class Section(models.Model):
     CV = models.ForeignKey('CV.CV', on_delete=models.CASCADE, related_name='sections')
@@ -19,12 +22,21 @@ class Section(models.Model):
     def __str__(self):
         return self.title
 
+    def getType(self):
+        return "section"
+
 class Institute(models.Model):
     section = models.ForeignKey('CV.Section', on_delete=models.CASCADE, related_name='institutes')
     start = models.TextField()
     end = models.TextField()
     location = models.TextField()
     area = models.TextField()
+
+    def __str__(self):
+        return self.location
+
+    def getType(self):
+        return "institute"
 
 class Element(models.Model):
     section = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name='elements')
@@ -34,3 +46,6 @@ class Element(models.Model):
 
     def __str__(self):
         return ("Element for section: " + self.section.__str__() + ", text: " + self.text)
+    
+    def getType(self):
+        return "element"

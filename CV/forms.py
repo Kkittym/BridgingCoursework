@@ -10,6 +10,9 @@ class CVForm(forms.ModelForm):
             'name': Textarea(attrs={'cols':80, 'rows':1}),
             'email': Textarea(attrs={'cols':80, 'rows':1}),
         }
+    
+    def getType(self):
+        return "cvform"
 
 class SectionForm(forms.ModelForm):
     class Meta:
@@ -18,6 +21,9 @@ class SectionForm(forms.ModelForm):
         widgets = {
             'title': Textarea(attrs={'cols':80, 'rows':1})
         }
+    
+    def getType(self):
+        return "sectionform"
 
 class ElementForm(forms.ModelForm):
     class Meta:
@@ -26,6 +32,9 @@ class ElementForm(forms.ModelForm):
         widgets = {
             'text': Textarea(attrs={'cols':80, 'rows':1}),
         }
+
+    def getType(self):
+        return "elementform"
 
 class InstituteForm(forms.ModelForm):
     class Meta:
@@ -37,3 +46,6 @@ class InstituteForm(forms.ModelForm):
             'location': Textarea(attrs={'cols':80, 'rows':1}),
             'area': Textarea(attrs={'cols':80, 'rows':1}),
         }
+    
+    def getType(self):
+        return "instituteform"

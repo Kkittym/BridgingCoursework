@@ -18,20 +18,28 @@
                 <li>{{ element.text }}</li>
             {% endfor %}
             </ul>
-            <!-- Button for adding elements -->
+            <a class="btn btn-default" href="{% url 'cv_new' %}">Add element</a>
         {% endfor %}
-        <!-- Button for adding institutes -->
+        <a class="btn btn-default" href="{% url 'cv_new' %}">Add institute</a>
         <ul>
         {% for element in section.elements.all %}
             <li>{{ element.text }}</li>
         {% endfor %}
         </ul>
     {% endfor %}
-    <!-- Button for adding sections -->
+    {% if form and form.getType == "sectionform" %}
+        <form method="POST">{% csrf_token %}
+            {{ form.as_p }}
+            <a class="btn btn-default" href="{% url 'cv' %}">close</a>
+            <button type="submit" class="save btn btn-default">add section</button>
+        </form>
+    {% else %}
+        <a class="btn btn-default" href="{% url 'section_new' %}">Add section</a>
+    {% endif %}
 </div>
 {% else %}
     {% if user.is_authenticated %}
-        <a href="{% url 'cv_new' %}"><span class="glyphicon glyphicon-plus"></span></a>
+        <a class="btn btn-default" href="{% url 'cv_new' %}">Add CV</a>
     {% endif%}
 {% endif%}
 {% endblock %}
