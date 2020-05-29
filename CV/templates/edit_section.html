@@ -1,0 +1,27 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{text}} Section{% endblock %}
+{% block content %}
+    <h2>{{text}} Section</h2>
+    <form method="POST" class="Section-form">{% csrf_token %}
+        {{ section_form.as_p }}
+        <button type="submit" name="section_form" class="save btn btn-default">Save</button>
+    </form>
+    {% for institute in section.institutes.all %}
+        <p>{{ institute.start }} - {{ institute.end }} | <b>{{ institute.location }}</b> | {{ institute.area }}</p>
+        <a class="btn btn-default" href="{% url 'edit_institute' secpk=section.pk instpk=institute.pk %}">Edit</a>
+        <a class="btn btn-default" href="{% url 'remove_institute' pk=institute.pk %}">Remove</a>
+        <ul>
+        {% for element in institute.elements.all %}
+            <li>{{ element.text }}</li>
+        {% endfor %}
+        </ul>
+    {% endfor %}
+    <ul>
+    {% for element in section.elements.all %}
+        <li>{{ element.text }} <a class="btn btn-default" href="{% url 'remove_element' elepk=element.pk%}">Remove</a></li>
+    {% endfor %}
+    </ul>
+    <a class="btn btn-default" href="{% url 'add_institute' secpk=section.pk %}">Add Institute</a>
+    <a class="btn btn-default" href="{% url 'add_element_to_section' secpk=section.pk %}">Add Element</a>
+{% endblock %}

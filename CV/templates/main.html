@@ -8,9 +8,11 @@
     <h1>{{ cv.name }}</h1>
     <p>{{ cv.phone }}</p>
     <p>{{ cv.email }}</p>
-    {% for section in CV.sections.all %}
-    <hr>
+    {% for section in cv.sections.all %}
         <h1>{{ section.title }}</h1>
+        {% if user.is_authenticated %}
+            <a class="btn btn-default" href="{% url 'edit_section' pk=section.pk%}">Edit</a>
+        {% endif%}
         {% for institute in section.institutes.all %}
             <p>{{ institute.start }} - {{ institute.end }} | <b>{{ institute.location }}</b> | {{ institute.area }}</p>
             <ul>
@@ -18,9 +20,7 @@
                 <li>{{ element.text }}</li>
             {% endfor %}
             </ul>
-            <a class="btn btn-default" href="{% url 'cv_new' %}">Add element</a>
         {% endfor %}
-        <a class="btn btn-default" href="{% url 'cv_new' %}">Add institute</a>
         <ul>
         {% for element in section.elements.all %}
             <li>{{ element.text }}</li>
@@ -31,10 +31,10 @@
         <form method="POST">{% csrf_token %}
             {{ form.as_p }}
             <a class="btn btn-default" href="{% url 'cv' %}">close</a>
-            <button type="submit" class="save btn btn-default">add section</button>
+            <button type="submit" class="btn btn-default">add section</button>
         </form>
     {% else %}
-        <a class="btn btn-default" href="{% url 'section_new' %}">Add section</a>
+        <a class="btn btn-default" href="{% url 'add_section' pk=cv.pk %}">Add section</a>
     {% endif %}
 </div>
 {% else %}
