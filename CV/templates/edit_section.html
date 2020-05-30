@@ -5,7 +5,7 @@
     <h2>{{text}} Section</h2>
     <form method="POST" class="Section-form">{% csrf_token %}
         {{ section_form.as_p }}
-        <button type="submit" name="section_form" class="save btn btn-default">Save</button>
+        <button type="submit" name="section_form" class="btn btn-default">Save section</button>
     </form>
     {% for institute in section.institutes.all %}
         <p>{{ institute.start }} - {{ institute.end }} | <b>{{ institute.location }}</b> | {{ institute.area }}</p>
@@ -17,11 +17,14 @@
         {% endfor %}
         </ul>
     {% endfor %}
+    <a class="btn btn-default" href="{% url 'add_institute' secpk=section.pk %}">Add Institute</a>
     <ul>
     {% for element in section.elements.all %}
-        <li>{{ element.text }} <a class="btn btn-default" href="{% url 'remove_element' elepk=element.pk%}">Remove</a></li>
+        <li>{{ element.text }} <a class="btn btn-default" href="{% url 'remove_element_from_section' elepk=element.pk secpk=section.pk %}">Remove</a></li>
     {% endfor %}
     </ul>
-    <a class="btn btn-default" href="{% url 'add_institute' secpk=section.pk %}">Add Institute</a>
-    <a class="btn btn-default" href="{% url 'add_element_to_section' secpk=section.pk %}">Add Element</a>
+    <form method="POST" class="Section-form">{% csrf_token %}
+        {{ element_form.as_p }}
+        <button type="submit" name="element_form" class="btn btn-default">Add element</button>
+    </form>
 {% endblock %}

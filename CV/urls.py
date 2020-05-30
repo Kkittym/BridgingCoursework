@@ -9,8 +9,6 @@ urlpatterns = [
     path('cv/edit_section/<int:secpk>/institute', views.add_institute, name="add_institute"),
     path('cv/edit_section/<int:secpk>/edit_institute/<int:instpk>', views.edit_institute, name="edit_institute"),
     path('cv/edit_section/<int:secpk>/remove_institute/<int:instpk>', views.remove_institute, name="remove_institute"),
-    path('cv/edit_section/<int:secpk>/element', views.add_element_to_section, name="add_element_to_section"),
-    path('cv/edit_section/<int:secpk>/edit_institute/<int:instpk>/element', views.add_element_to_institute, name="add_element_to_institute"),
     path('cv/edit_section/<int:secpk>/remove_element/<int:elepk>', views.remove_element_from_section, name="remove_element_from_section"),
     path('cv/edit_section/<int:secpk>/edit_institute/<int:instpk>/remove_element/<int:elepk>', views.remove_element_from_institute, name="remove_element_from_institute"),
 ]

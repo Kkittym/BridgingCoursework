@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import Textarea
-from .models import CV, Section, Element, Institute
+from .models import CV, Section, SectionElement, Institute, InstituteElement
 
 class CVForm(forms.ModelForm):
     class Meta:
@@ -25,16 +25,16 @@ class SectionForm(forms.ModelForm):
     def getType(self):
         return "sectionform"
 
-class ElementForm(forms.ModelForm):
+class SectionElementForm(forms.ModelForm):
     class Meta:
-        model = Element
+        model = SectionElement
         fields = ('text',)
         widgets = {
             'text': Textarea(attrs={'cols':80, 'rows':1}),
         }
 
     def getType(self):
-        return "elementform"
+        return "sectionelementform"
 
 class InstituteForm(forms.ModelForm):
     class Meta:
@@ -49,3 +49,14 @@ class InstituteForm(forms.ModelForm):
     
     def getType(self):
         return "instituteform"
+
+class InstituteElementForm(forms.ModelForm):
+    class Meta:
+        model = InstituteElement
+        fields = ('text',)
+        widgets = {
+            'text': Textarea(attrs={'cols':80, 'rows':1}),
+        }
+
+    def getType(self):
+        return "instituteelementform"

@@ -38,14 +38,22 @@ class Institute(models.Model):
     def getType(self):
         return "institute"
 
-class Element(models.Model):
-    section = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name='elements')
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('section', 'object_id')
+class SectionElement(models.Model):
+    section = models.ForeignKey('CV.Section', on_delete=models.CASCADE, related_name='elements')
     text = models.TextField()
 
     def __str__(self):
         return ("Element for section: " + self.section.__str__() + ", text: " + self.text)
     
     def getType(self):
-        return "element"
+        return "Section element"
+
+class InstituteElement(models.Model):
+    institute = models.ForeignKey('CV.Institute', on_delete=models.CASCADE, related_name='elements')
+    text = models.TextField()
+
+    def __str__(self):
+        return ("Element for section: " + self.institute.__str__() + ", text: " + self.text)
+    
+    def getType(self):
+        return "Institute element"
