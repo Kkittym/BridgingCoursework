@@ -11,10 +11,11 @@ def main(request):
         cv = CV.objects.get()
     except:
         cv = None
-    print(cv)
-    print(cv.sections.all())
-    for section in cv.sections.all():
-        print (section.title)
+    #print(cv)
+    #print(cv.sections.all())
+    #for section in cv.sections.all():
+        #print (section.title)
+        #print(section.institutes.all())
     return render(request, 'main.html', {'cv':cv})
 
 @login_required
@@ -33,10 +34,27 @@ def CV_new(request):
 def add_section(request, pk):
     cv = get_object_or_404(CV, pk=pk)
     if request.method == "POST":
+        form = SectionForm(request.POST)
+        if form.is_valid():
+            section = form.save(commit=False)
+            section.CV = cv
+            section.save()
+            return redirect('edit_section', secpk=section.pk, pk=pk)
+    else:
+        section_form = SectionForm()
+    return render(request, 'main.html', {'cv':cv, 'section_form': section_form})
+
+@login_required
+def edit_section(request, pk, secpk):
+    cv = get_object_or_404(CV, pk=pk)
+    section = get_object_or_404(Section, pk=secpk)
+    section_form = None
+    element_form = None
+    if request.method == "POST":
         if "section_form" in request.POST:
-            form = SectionForm(request.POST)
-            if form.is_valid():
-                section = form.save(commit=False)
+            section_form = SectionForm(request.POST, instance=section)
+            if section_form.is_valid():
+                section = section_form.save(commit=False)
                 section.CV = cv
                 section.save()
                 return redirect('cv')
@@ -46,84 +64,74 @@ def add_section(request, pk):
                 element = element_form.save(commit=False)
                 element.section = section
                 element.save()
-                return redirect('edit_section', pk=section.pk)
-    else:
-        form = SectionForm()
-    return render(request, 'edit_section.html', {'form': form, 'text': 'New',})
-
-@login_required
-def edit_section(request, pk):
-    section = get_object_or_404(Section, pk=pk)
-    if request.method == "POST":
-        if "section_form" in request.POST:
-            section_form = SectionForm(request.POST)
-            if section_form.is_valid():
-                section = section_form.save(commit=False)
-                section.save()
-                return redirect('cv')
-        if "element_form" in request.POST:
-            element_form = SectionElementForm(request.POST)
-            if element_form.is_valid():
-                element = element_form.save(commit=False)
-                element.section = section
-                element.save()
-                return redirect('edit_section', pk=section.pk)
+                return redirect('edit_section', secpk=section.pk, pk=section.CV.id)
     else:
         section_form = SectionForm(instance=section)
         element_form = SectionElementForm()
     return render(request, 'edit_section.html', {'section_form': section_form, 'text': 'Edit', 'section':section, 'element_form': element_form})
 
 @login_required
+def remove_section(request, pk, secpk):
+    section = get_object_or_404(Section, pk=secpk)
+    section.delete()
+    return redirect('cv')
+
+@login_required
 def add_institute(request, secpk):
     section = get_object_or_404(Section, pk=secpk)
+    #print("Section for pk", secpk, ":", section)
     if request.method == "POST":
         form = InstituteForm(request.POST)
         if form.is_valid():
+            #print('form is valid, adding to section:', section)
             institute = form.save(commit=False)
             institute.section = section
-            section.save()
-            return redirect('edit_section', pk=section.pk)
+            institute.save()
+            return redirect('edit_institute', instpk=institute.pk, secpk=secpk)
     else:
-        form = InstituteForm()
-    return render(request, 'edit_institute.html', {'form': form, 'text': 'New',})
+        institute_form = InstituteForm()
+    return render(request, 'edit_section.html', {'institute_form': institute_form, 'text': 'Edit', 'section':section})
 
 @login_required
 def edit_institute(request, secpk, instpk):
+    institute = get_object_or_404(Institute, pk=instpk)
     section = get_object_or_404(Section, pk=secpk)
-    institute = get_object_or_404(Section, pk=secpk)
+    institute_form = None
+    element_form = None
     if request.method == "POST":
-        if "section_form" in request.POST:
-            section_form = SectionForm(request.POST)
-            if section_form.is_valid():
-                section = section_form.save(commit=False)
-                section.save()
-                return redirect('edit_section', pk=secpk)
+        if "institute_form" in request.POST:
+            institute_form = InstituteForm(request.POST, instance=institute)
+            if institute_form.is_valid():
+                institute = institute_form.save(commit=False)
+                institute.section = section
+                institute.save()
+                return redirect('edit_section', secpk=secpk, pk=section.CV.id)
+        if "element_form" in request.POST:
+            element_form = InstituteElementForm(request.POST)
+            if element_form.is_valid():
+                element = element_form.save(commit=False)
+                element.institute = institute
+                element.save()
+                return redirect('edit_institute', secpk=secpk, instpk=instpk)
     else:
-        form = InstituteForm(instance=section)
-    return render(request, 'edit_institute.html', {'form': form, 'text': 'Edit', 'institute':institute})
+        institute_form = InstituteForm(instance=institute)
+        element_form = SectionElementForm()
+    return render(request, 'edit_institute.html', {'institute_form': institute_form, 'text': 'Edit', 'institute':institute, 'element_form': element_form})
 
 @login_required
 def remove_institute(request, secpk, instpk):
     institute = get_object_or_404(Institute, pk=instpk)
     institute.delete()
-    return redirect('edit_section', pk=secpk)
-
-@login_required
-def add_element_to_section(request, secpk):
-    pass
-
-@login_required
-def add_element_to_institute(request, instpk):
-    pass
+    return redirect('edit_section', secpk=secpk)
 
 @login_required
 def remove_element_from_section(request, secpk, elepk):
     element = get_object_or_404(SectionElement, pk=elepk)
     element.delete()
-    return redirect('edit_section', pk=secpk)
+    return redirect('edit_section', secpk=secpk)
 
 @login_required
-def remove_element_from_institute(request, secpk, instpk, elepk):
+def remove_element_from_institute(request, instpk, elepk):
     element = get_object_or_404(InstituteElement, pk=elepk)
     element.delete()
-    return redirect('edit_institute', pk=instpk)
+    return redirect('edit_institute', instpk=instpk, secpk=get_object_or_404(Institute, pk=instpk).section.id)

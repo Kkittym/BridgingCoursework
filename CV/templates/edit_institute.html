@@ -1,0 +1,20 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{text}} Institute{% endblock %}
+{% block content %}
+    <h2>{{text}} Institute</h2>
+    <form method="POST" class="institute-form">{% csrf_token %}
+        {{ institute_form.as_p }}
+        <button type="submit" name="institute_form" class="btn btn-default">Save institute</button>
+    </form>
+    <ul>
+    {% for element in institute.elements.all %}
+        <li>{{ element.text }} <a class="btn btn-default" href="{% url 'remove_element_from_institute' elepk=element.pk instpk=institute.pk %}">Remove</a></li>
+    {% endfor %}
+    </ul>
+    <p>New element</p>
+    <form method="POST" class="element-form">{% csrf_token %}
+        {{ element_form.as_p }}
+        <button type="submit" name="element_form" class="btn btn-default">Add element</button>
+    </form>
+{% endblock %}

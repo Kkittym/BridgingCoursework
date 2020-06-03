@@ -28,7 +28,13 @@ class HomePageTest(TestCase):
         response = self.client.get('/cv')
         self.assertIn('Other Skills', response.content.decode())
 
-class AdminTestCase(TestCase):
-    def setUp(self):
-        User.objects.create_superuser()
+    def test_no_edit_buttons_on_page(self):
+        response = self.client.get('/cv')
+        self.assertNotIn('Edit', response.content.decode())
+
+    def test_add_section_button_not_on_page(self):
+        response = self.client.get('/cv')
+        self.assertNotIn('Add section', response.content.decode())
+
+
 

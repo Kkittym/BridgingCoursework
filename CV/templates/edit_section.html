@@ -3,28 +3,43 @@
 {% block title %}{{text}} Section{% endblock %}
 {% block content %}
     <h2>{{text}} Section</h2>
+    {% if section_form %}
     <form method="POST" class="Section-form">{% csrf_token %}
         {{ section_form.as_p }}
         <button type="submit" name="section_form" class="btn btn-default">Save section</button>
     </form>
+    {% else%}
+        {{section.title}}
+    {% endif %}
     {% for institute in section.institutes.all %}
         <p>{{ institute.start }} - {{ institute.end }} | <b>{{ institute.location }}</b> | {{ institute.area }}</p>
         <a class="btn btn-default" href="{% url 'edit_institute' secpk=section.pk instpk=institute.pk %}">Edit</a>
-        <a class="btn btn-default" href="{% url 'remove_institute' pk=institute.pk %}">Remove</a>
+        <a class="btn btn-default" href="{% url 'remove_institute' secpk=section.pk instpk=institute.pk %}">Remove</a>
         <ul>
         {% for element in institute.elements.all %}
             <li>{{ element.text }}</li>
         {% endfor %}
         </ul>
     {% endfor %}
-    <a class="btn btn-default" href="{% url 'add_institute' secpk=section.pk %}">Add Institute</a>
+    {% if institute_form %}
+        <p>New institute</p>
+        <form method="POST" class="Section-form">{% csrf_token %}
+            {{ institute_form.as_p }}
+            <button type="submit" name="institute_form" class="btn btn-default">Add institute</button>
+        </form>
+    {% else %}
+        <a class="btn btn-default" href="{% url 'add_institute' secpk=section.pk %}">Add Institute</a>
+    {% endif %}
     <ul>
     {% for element in section.elements.all %}
         <li>{{ element.text }} <a class="btn btn-default" href="{% url 'remove_element_from_section' elepk=element.pk secpk=section.pk %}">Remove</a></li>
     {% endfor %}
     </ul>
-    <form method="POST" class="Section-form">{% csrf_token %}
-        {{ element_form.as_p }}
-        <button type="submit" name="element_form" class="btn btn-default">Add element</button>
-    </form>
+    {% if element_form %}
+        <p>New element</p>
+        <form method="POST" class="Section-form">{% csrf_token %}
+            {{ element_form.as_p }}
+            <button type="submit" name="element_form" class="btn btn-default">Add element</button>
+        </form>
+    {% endif %}
 {% endblock %}

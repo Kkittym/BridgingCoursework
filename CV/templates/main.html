@@ -6,36 +6,43 @@
 <!-- Display cv -->
 <div class="cv">
     <h1>{{ cv.name }}</h1>
-    <p>{{ cv.phone }}</p>
-    <p>{{ cv.email }}</p>
+    <h3>{{ cv.phone }}</h3>
+    <h3>{{ cv.email }}</h3>
+    <!-- Display sections -->
     {% for section in cv.sections.all %}
         <h1>{{ section.title }}</h1>
         {% if user.is_authenticated %}
-            <a class="btn btn-default" href="{% url 'edit_section' pk=section.pk%}">Edit</a>
+            <a class="btn btn-default" href="{% url 'edit_section' pk=cv.pk secpk=section.pk%}">Edit</a>
+            <a class="btn btn-default" href="{% url 'remove_section' pk=cv.pk secpk=section.pk %}">Remove</a>
         {% endif%}
+        <!-- Display institutes -->
         {% for institute in section.institutes.all %}
-            <p>{{ institute.start }} - {{ institute.end }} | <b>{{ institute.location }}</b> | {{ institute.area }}</p>
+            <p>{{ institute.start }} - {{ institute.end }} | <b>{{ institute.location }}</b> {% if institute.area %}| {{ institute.area }}{% endif %}</p>
             <ul>
+            <!-- Display elements -->
             {% for element in institute.elements.all %}
                 <li>{{ element.text }}</li>
             {% endfor %}
             </ul>
         {% endfor %}
         <ul>
+        <!-- Display elements -->
         {% for element in section.elements.all %}
             <li>{{ element.text }}</li>
         {% endfor %}
         </ul>
     {% endfor %}
-    {% if form and form.getType == "sectionform" %}
-        <form method="POST">{% csrf_token %}
-            {{ form.as_p }}
-            <a class="btn btn-default" href="{% url 'cv' %}">close</a>
-            <button type="submit" class="btn btn-default">add section</button>
+    {% if user.is_authenticated %}
+    {% if section_form %}
+        <p>New section</p>
+        <form method="POST" class="Section-form">{% csrf_token %}
+            {{ section_form.as_p }}
+            <button type="submit" name="section_form" class="btn btn-default">Add section</button>
         </form>
-    {% else %}
-        <a class="btn btn-default" href="{% url 'add_section' pk=cv.pk %}">Add section</a>
-    {% endif %}
+        {% else %}
+            <a class="btn btn-default" href="{% url 'add_section' pk=cv.pk %}">Add section</a>
+        {% endif %}
+    {% endif%}
 </div>
 {% else %}
     {% if user.is_authenticated %}

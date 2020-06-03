@@ -30,7 +30,7 @@ class Institute(models.Model):
     start = models.TextField()
     end = models.TextField()
     location = models.TextField()
-    area = models.TextField()
+    area = models.TextField(blank=True)
 
     def __str__(self):
         return self.location
