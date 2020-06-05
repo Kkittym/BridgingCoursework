@@ -31,10 +31,6 @@ body {
     margin-left: 40px;
 }
 
-h1, h2, h3, h4 {
-    font-family: 'Arial', cursive;
-}
-
 .date {
     color: #828282;
 }
@@ -81,13 +77,24 @@ h1, h2, h3, h4 {
     font-family: 'Arial';
 }
 
-.footer-link .footer-link:hover, .footer-link:visited {
+.footer-link, .footer-link:hover, .footer-link:visited {
     color: #ffffff;
-    font-size: 18pt;
+    font-size: 14pt;
 }
 
 .column {
     float: left;
     width: 33.33%;
     border-style: solid;
+}
+
+.cv {
+    width: 66.67%;
+    padding-bottom: 40px;
+    font-family: 'Times New Roman';
+}
+
+.cv p, .cv ul {
+    font-size: 14pt;
+    font-family: 'Times New Roman';
 }
