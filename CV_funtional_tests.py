@@ -22,7 +22,7 @@ class ExternalVisitorTest(unittest.TestCase):
         # Employer follows link to CV
         link.click()
         
-        time.sleep(5) 
+        time.sleep(1) 
         # Employer views a page containing Katie Midgley's CV. This includes:
             # Personal details
             # Education
@@ -30,17 +30,20 @@ class ExternalVisitorTest(unittest.TestCase):
             # Other Skills
 
         headings = self.browser.find_elements_by_tag_name('h1')
-        print(headings)
-        self.assertIn("Education", headings)
-        self.assertIn("Work Experience", headings)
-        self.assertIn("Other Skills", headings)
+        texts = []
+        for heading in headings:
+            texts.append(heading.text)
+
+        self.assertIn("Education", texts)
+        self.assertIn("Work Experience", texts)
+        self.assertIn("Other Skills", texts)
 
         # Employer does not see any edit of remove buttons
-        buttons = self.browser.find_element_by_class_name('btn')
+        buttons = self.browser.find_elements_by_class_name('btn')
         self.assertFalse(buttons)
 
         # Employer has seen all they want 
-        browser.quit()
+        self.browser.quit()
 
 if __name__ == '__main__':  
     unittest.main()  
