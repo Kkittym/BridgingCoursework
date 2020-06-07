@@ -8,14 +8,9 @@ from django.contrib.auth.decorators import login_required
 def main(request):
     cv = None
     try:
-        cv = CV.objects.get()
+        cv = CV.objects.first()
     except:
         cv = None
-    #print(cv)
-    #print(cv.sections.all())
-    #for section in cv.sections.all():
-        #print (section.title)
-        #print(section.institutes.all())
     return render(request, 'main.html', {'cv':cv})
 
 @login_required
