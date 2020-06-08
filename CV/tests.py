@@ -154,3 +154,97 @@ class SectionTest(TestCase):
         response = self.client.get('/cv')
         self.assertIn('Section Post Test', response.content.decode())
 
+    def test_post_update_section_saved(self):
+        self.loginSetUp()
+        Section.objects.create(CV=CV.objects.first(), title="Test")
+        self.assertEqual(Section.objects.count(), 1)
+        section = Section.objects.first()
+        self.assertEqual(section.title, 'Test')
+
+        self.client.post('/cv/1/edit_section/1', data={'section_form':'', 'title':'Changed test'})
+
+        self.assertEqual(Section.objects.count(), 1)
+        section = Section.objects.first()
+        self.assertEqual(section.title, 'Changed test')
+
+    def test_remove_section(self):
+        self.loginSetUp()
+        self.assertEqual(Section.objects.count(), 0)
+        Section.objects.create(CV=CV.objects.first(), title="Test")
+        self.assertEqual(Section.objects.count(), 1)
+        self.client.get('/cv/1/remove_section/1')
+        self.assertEqual(Section.objects.count(), 0)
+
+    def test_remove_section_redirects(self):
+        self.loginSetUp()
+        Section.objects.create(CV=CV.objects.first(), title="Test")
+        response = self.client.get('/cv/1/remove_section/1')
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/cv')
+
+class InstituteTest(TestCase):
+    def loginSetUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        login = self.client.login(username='testuser', password='12345')
+        CV.objects.create(name='Test Test', phone='12345678910', email='test.test@test.com')
+        Section.objects.create(CV=CV.objects.first(), title="Test")
+
+    def test_redirects_after_POST(self):
+        self.loginSetUp()
+        response = self.client.post('/cv/edit_section/1/new_institute', data={'start':'NowStart', 'end':'NowEnd', 'location':'Institute', 'area':'Institute Test'})
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/cv/edit_section/1/edit_institute/1')
+
+    def test_post_new_institute_saved(self):
+        self.loginSetUp()
+        self.client.post('/cv/edit_section/1/new_institute', data={'start':'NowStart', 'end':'NowEnd', 'location':'Institute', 'area':'Institute Test'})
+
+        self.assertEqual(Institute.objects.count(), 1)
+        new = Institute.objects.first()
+        self.assertEqual(new.start, 'NowStart')
+        self.assertEqual(new.end, 'NowEnd')
+        self.assertEqual(new.location, 'Institute')
+        self.assertEqual(new.area, 'Institute Test')
+
+    def test_post_new_institute_appears_on_page(self):
+        self.loginSetUp()
+        self.client.post('/cv/edit_section/1/new_institute', data={'start':'NowStart', 'end':'NowEnd', 'location':'Institute', 'area':'Institute Test'})
+        
+        response = self.client.get('/cv')
+        self.assertIn('NowStart', response.content.decode())
+        self.assertIn('NowEnd', response.content.decode())
+        self.assertIn('Institute', response.content.decode())
+        self.assertIn('Institute Test', response.content.decode())
+
+    def test_post_update_institute_saved(self):
+        self.loginSetUp()
+        Institute.objects.create(section=Section.objects.first(), start='Test', end='Test', location='Test', area='Test')
+        self.assertEqual(Institute.objects.count(), 1)
+        institute = Institute.objects.first()
+        self.assertEqual(institute.location, 'Test')
+
+        self.client.post('/cv/edit_section/1/edit_institute/1', data={'institute_form':'', 'start':'Test', 'end':'Test', 'location':'Changed location', 'area':'Test'})
+
+        self.assertEqual(Institute.objects.count(), 1)
+        institute = Institute.objects.first()
+        self.assertEqual(institute.location, 'Changed location')
+
+    def test_remove_institute(self):
+        self.loginSetUp()
+        self.assertEqual(Institute.objects.count(), 0)
+        Institute.objects.create(section=Section.objects.first(), start='Test', end='Test', location='Test', area='Test')
+        self.assertEqual(Institute.objects.count(), 1)
+        self.client.get('/cv/edit_section/1/remove_institute/1')
+        self.assertEqual(Institute.objects.count(), 0)
+
+    def test_remove_institute_redirects(self):
+        self.loginSetUp()
+        Institute.objects.create(section=Section.objects.first(), start='Test', end='Test', location='Test', area='Test')
+        response = self.client.get('/cv/edit_section/1/remove_institute/1')
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/cv/1/edit_section/1')
+
+#/cv/edit_section/1/new_institute

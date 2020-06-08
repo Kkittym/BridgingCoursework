@@ -117,13 +117,13 @@ def edit_institute(request, secpk, instpk):
 def remove_institute(request, secpk, instpk):
     institute = get_object_or_404(Institute, pk=instpk)
     institute.delete()
-    return redirect('edit_section', secpk=secpk)
+    return redirect('edit_section', secpk=secpk, pk=get_object_or_404(Section, pk=secpk).CV.id)
 
 @login_required
 def remove_element_from_section(request, secpk, elepk):
     element = get_object_or_404(SectionElement, pk=elepk)
     element.delete()
-    return redirect('edit_section', secpk=secpk)
+    return redirect('edit_section', secpk=secpk, pk=get_object_or_404(Section, pk=secpk).CV.id)
 
 @login_required
 def remove_element_from_institute(request, instpk, elepk):
