@@ -183,6 +183,17 @@ class SectionTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], '/cv')
 
+    def test_remove_section_not_on_page(self):
+        self.loginSetUp()
+        Section.objects.create(CV=CV.objects.first(), title="Removed section page test")
+        response = self.client.get('/cv')
+        self.assertIn('Removed section page test', response.content.decode())
+
+        self.client.get('/cv/1/remove_section/1')
+
+        response = self.client.get('/cv')
+        self.assertNotIn('Removed section page test', response.content.decode())
+
 class InstituteTest(TestCase):
     def loginSetUp(self):
         self.user = User.objects.create_user(username='testuser', password='12345')
@@ -247,4 +258,109 @@ class InstituteTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], '/cv/1/edit_section/1')
 
-#/cv/edit_section/1/new_institute
+    def test_remove_institute_not_on_page(self):
+        self.loginSetUp()
+        Institute.objects.create(section=Section.objects.first(), start='Test', end='Test', location='Test', area='Removed institute page test')
+        response = self.client.get('/cv')
+        self.assertIn('Removed institute page test', response.content.decode())
+
+        self.client.get('/cv/edit_section/1/remove_institute/1')
+
+        response = self.client.get('/cv')
+        self.assertNotIn('Removed institute page test', response.content.decode())
+
+class ElementTest(TestCase):
+    def loginSetUp(self):
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        login = self.client.login(username='testuser', password='12345')
+        CV.objects.create(name='Test Test', phone='12345678910', email='test.test@test.com')
+        Section.objects.create(CV=CV.objects.first(), title="Test")
+        Institute.objects.create(section=Section.objects.first(), start='Test', end='Test', location='Test', area='Test')
+
+    def test_add_section_element(self):
+        self.loginSetUp()
+        response = self.client.post('/cv/1/edit_section/1', data={'element_form':'', 'text':'Test add section element'})
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/cv/1/edit_section/1')
+
+        self.assertEqual(SectionElement.objects.count(), 1)
+        new = SectionElement.objects.first()
+        self.assertEqual(new.text, 'Test add section element')
+
+        response = self.client.get('/cv/1/edit_section/1')
+        self.assertIn('Test add section element', response.content.decode())
+
+        response = self.client.get('/cv')
+        self.assertIn('Test add section element', response.content.decode())
+
+    def test_add_institute_element(self):
+        self.loginSetUp()
+        response = self.client.post('/cv/edit_section/1/edit_institute/1', data={'element_form':'', 'text':'Test add institute element'})
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/cv/edit_section/1/edit_institute/1')
+
+        self.assertEqual(InstituteElement.objects.count(), 1)
+        new = InstituteElement.objects.first()
+        self.assertEqual(new.text, 'Test add institute element')
+
+        response = self.client.get('/cv/edit_section/1/edit_institute/1')
+        self.assertIn('Test add institute element', response.content.decode())
+
+        response = self.client.get('/cv')
+        self.assertIn('Test add institute element', response.content.decode())
+
+    def test_remove_section_element(self):
+        self.loginSetUp()
+        self.assertEqual(SectionElement.objects.count(), 0)
+        SectionElement.objects.create(section=Section.objects.first(), text="Removed section element")
+        self.assertEqual(SectionElement.objects.count(), 1)
+        self.client.get('/cv/edit_section/1/remove_element/1')
+        self.assertEqual(SectionElement.objects.count(), 0)
+
+    def test_remove_section_element_redirects(self):
+        self.loginSetUp()
+        SectionElement.objects.create(section=Section.objects.first(), text="Removed section element")
+        response = self.client.get('/cv/edit_section/1/remove_element/1')
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/cv/1/edit_section/1')
+
+    def test_remove_section_element_not_on_page(self):
+        self.loginSetUp()
+        SectionElement.objects.create(section=Section.objects.first(), text="Removed section element page test")
+        response = self.client.get('/cv')
+        self.assertIn('Removed section element page test', response.content.decode())
+
+        self.client.get('/cv/edit_section/1/remove_element/1')
+
+        response = self.client.get('/cv')
+        self.assertNotIn('Removed section element page test', response.content.decode())
+
+    def test_remove_institute_element(self):
+        self.loginSetUp()
+        self.assertEqual(InstituteElement.objects.count(), 0)
+        InstituteElement.objects.create(institute=Institute.objects.first(), text="Removed institute element")
+        self.assertEqual(InstituteElement.objects.count(), 1)
+        self.client.get('/cv/edit_section/edit_institute/1/remove_element/1')
+        self.assertEqual(InstituteElement.objects.count(), 0)
+
+    def test_remove_institute_element_redirects(self):
+        self.loginSetUp()
+        InstituteElement.objects.create(institute=Institute.objects.first(), text="Removed institute element")
+        response = self.client.get('/cv/edit_section/edit_institute/1/remove_element/1')
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/cv/edit_section/1/edit_institute/1')
+
+    def test_remove_institute_element_not_on_page(self):
+        self.loginSetUp()
+        InstituteElement.objects.create(institute=Institute.objects.first(), text="Removed institute element page test")
+        response = self.client.get('/cv')
+        self.assertIn('Removed institute element page test', response.content.decode())
+
+        self.client.get('/cv/edit_section/edit_institute/1/remove_element/1')
+
+        response = self.client.get('/cv')
+        self.assertNotIn('Removed institute element page test', response.content.decode())
