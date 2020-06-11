@@ -6,6 +6,6 @@
 {% block content %}
 <div class="cat-image" >
     <img src="{% static 'media/404.gif' %}" alt="404 error">
-    <h1>Page at {{ request.url }} not found</h1>
+    <h1>Page at {{ request.META['PATH_INFO'] }} not found</h1>
 </div>
 {% endblock %}
