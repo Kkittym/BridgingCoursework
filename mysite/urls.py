@@ -25,3 +25,6 @@ urlpatterns = [
     path('', include('lists.urls')),
     path('', include('CV.urls')),
 ]
+
+handler404 = 'blog.views.handler404'
+handler500 = 'blog.views.handler500'
