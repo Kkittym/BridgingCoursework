@@ -91,7 +91,7 @@ def comment_remove(request, pk):
     return redirect('post_detail', pk=comment.post.pk)
 
 def handler404(request, exception):
-    return render (request, 'blog/404.html', status=404)
+    return render (request, 'blog/404.html', {'text':  request.META['PATH_INFO']}, status=404)
 
 def handler500(request):
     return render (request, 'blog/500.html', status=500)
